@@ -9,11 +9,14 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB configuration
-const db = require("./config/db");
+const db = require("./config/keys");
 
 //Routes
-const usersRoutes = require('./routes/usersRoutes');
+const generateFormRoutes = require('./routes/generateFormRoutes');
+const saveFormDataRoutes = require('./routes/saveFormDataRoutes');
 
+// connect with database and check production mode or development mode
+// if website is production mode then use online mongodb database otherwise user local database
 mongoose
     .connect(
         process.env.NODE_ENV === "production" ? db.mongoURI : db.mongoURIDev
@@ -23,7 +26,8 @@ mongoose
 
 
 //Use Routes
-app.use("/api", usersRoutes);
+app.use("/api", generateFormRoutes);
+app.use("/api", saveFormDataRoutes);
 
 app.get("/api", (req, res) => {
     res.send("Server Running...");
